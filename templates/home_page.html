@@ -1,0 +1,670 @@
+{% extends '_partials/base.html' %} {% block content %}
+
+<div class="page-container">
+  <div class="page-sidebar">
+    <a class="logo" href="#">Image Processing</a>
+
+    <ul class="list-unstyled accordion-menu">
+      <li class="active-page nav-lnk" data-target="main-ops">
+        <a href="#"><i data-feather="activity"></i>Home</a>
+      </li>
+
+      <li class="nav-lnk" data-target="basic-ops">
+        <a href="#"><i data-feather="sliders"></i>Basic Operations</a>
+      </li>
+
+      <li class="nav-lnk" data-target="conv-ops">
+        <a href="#"><i data-feather="aperture"></i>Convolution</a>
+      </li>
+
+      <li class="nav-lnk" data-target="inter-ops">
+        <a href="#"><i data-feather="box"></i>Interpolation</a>
+      </li>
+
+      <li class="nav-lnk" data-target="compr-ops">
+        <a href="#"><i data-feather="layers"></i>Compression</a>
+      </li>
+
+      <li class="nav-lnk" data-target="decompr-ops">
+        <a href="#"><i data-feather="pie-chart"></i>Decompression</a>
+      </li>
+
+      <li class="nav-lnk" data-target="segment-ops">
+        <a href="#"><i data-feather="image"></i>Segmentation</a>
+      </li>
+    </ul>
+    <a href="#" id="sidebar-collapsed-toggle"
+      ><i data-feather="arrow-right"></i
+    ></a>
+  </div>
+  <div class="page-content">
+    <div class="page-header">
+      <nav class="navbar navbar-expand-lg d-flex justify-content-between">
+        <div class="header-title flex-fill">
+          <a href="#" id="sidebar-toggle"><i data-feather="arrow-left"></i></a>
+          <h5 id="page-title">Home</h5>
+        </div>
+
+        <div class="flex-fill" id="headerNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <button class="nav-link btn btn-outline-success m-b-xs upl">
+                <i data-feather="upload"></i>
+              </button>
+            </li>
+
+            <li class="nav-item dropdown">
+              <button
+                class="btn btn-outline-success m-b-xs"
+                href="#"
+                id="profileDropDown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Save / Export
+              </button>
+              <div
+                class="dropdown-menu dropdown-menu-end profile-drop-menu"
+                aria-labelledby="profileDropDown"
+              >
+              <button id="pngsave" class="dropdown-item" type="button">Save as PNG</button>
+              <button id="jpgsave" class="dropdown-item" type="button">Save as JPEG</button>
+              <button id="webpsave" class="dropdown-item" type="button">Save as WEBP
+                <span class="badge ml-15 rounded-pill bg-success"
+                    >new</span>
+              </button>
+
+              </div>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+    <div class="main-wrapper">
+      <div class="row">
+        <div class="col-md-12 col-lg-8">
+          <div class="card card-bg">
+            <div class="card-body">
+              <div class="post">
+                <div class="flex-between">
+                  <div class="post-info p-0">
+                    <span class="post-author">Image</span>
+                  </div>
+                  <div class="post-header-actions p-0">
+                    <div class="dropdown">
+                      <i
+                        type="button"
+                        id="dropdownMenuButton"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                        data-feather="more-vertical"
+                      >
+                      </i>
+
+                      <i class=""></i>
+                      <ul
+                        class="dropdown-menu"
+                        aria-labelledby="dropdownMenuButton"
+                        style=""
+                      >
+                        <li>
+                          <button
+                            class="dropdown-item"
+                            type="button"
+                            id="revert-button"
+                          >
+                            Revert
+                          </button>
+                        </li>
+                        <li>
+                          <button
+                            class="dropdown-item"
+                            type="button"
+                            id="delete-button"
+                          >
+                            Delete
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="post-body">
+                  <div class="area">
+                    <form
+                      method="post"
+                      enctype="multipart/form-data"
+                      id="image-upload-form"
+                    >
+                      {% csrf_token %}
+                      <input
+                        type="file"
+                        id="upload"
+                        class="file-upload"
+                        accept="image/*"
+                      />
+                    </form>
+                  </div>
+
+                  <div id="image-comparison-container">
+                    <img id="original-image" class="orig-display" src="#" style="display: none;">
+                    <img
+                      id="uploaded-image"
+                      class="image-display"
+                      src=""
+                      alt="Uploaded Image"
+                    />
+                </div>
+
+                </div>
+
+                <div class="post-actions">
+                  <div
+                    class="btn-group me-2"
+                    role="group"
+                    aria-label="Second group"
+                  >
+                    <button type="button" class="btn btn-link tools-btn">
+                      <i data-feather="zoom-in"></i>
+                    </button>
+                    <button type="button" class="btn btn-link tools-btn">
+                      <i data-feather="zoom-out"></i>
+                    </button>
+                  </div>
+
+                  <div
+                    class="btn-group me-2"
+                    role="group"
+                    aria-label="Third group"
+                  >
+                    <button type="button" class="btn btn-link tools-btn">
+                      000x000
+                    </button>
+                  </div>
+
+                  <div
+                    class="btn-group me-2"
+                    role="group"
+                    aria-label="Fourth group"
+                  >
+                    <button type="button" class="btn btn-link tools-btn">
+                      <i data-feather="crop"></i>
+                    </button>
+                  </div>
+
+                  <div
+                    class="btn-group me-2"
+                    role="group"
+                    aria-label="Second group"
+                  >
+                    <button type="button" class="btn btn-link tools-btn">
+                      <i data-feather="corner-up-left"></i>
+                    </button>
+                    <button type="button" class="btn btn-link tools-btn">
+                      <i data-feather="corner-up-right"></i>
+                    </button>
+                  </div>
+
+                  <div
+                    class="btn-group me-2"
+                    role="group"
+                    aria-label="Third group"
+                  >
+                    <button type="button" class="btn btn-link tools-btn">
+                      <i data-feather="rotate-cw"></i>
+                    </button>
+                  </div>
+
+                  <div
+                    class="btn-group me-2"
+                    role="group"
+                    aria-label="Fourth group"
+                  >
+                    <button id="before-after-slider" type="button" class="btn btn-link tools-btn">
+                      <i data-feather="repeat"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <!-- Main items -->
+          <div class="card card-bg main-ops itm">
+            <div class="card-body">
+              <h5 class="card-title">Histogram</h5>
+              <div id="chartX"></div>
+              <p class="card-description uploadPrompt" style="display: none">
+                Please upload an image to view the histogram.
+              </p>
+            </div>
+          </div>
+
+          <div class="card card-bg main-ops itm" id="main-ops-equalization">
+            <div class="card-body" style="position: relative">
+              <h5 class="card-title">Histogram Equalization</h5>
+              <p class="card-description">
+                Histogram Equalization is a technique used in image processing to enhance the contrast and improve the visual appearance of an image.
+              </p>
+              <button
+                id="apply-equalization-button"
+                type="button"
+                class="btn btn-outline-secondary m-b-xs"
+              >
+                Apply equalization
+              </button>
+            </div>
+          </div>
+
+          <!-- Basic operations items -->
+          <div class="card card-bg basic-ops itm">
+            <div class="card-body" style="position: relative">
+              <h5 class="card-title">Log Transformation</h5>
+              <p class="card-description">
+                Enhancing the visibility of details (improving constrast). LT is
+                using the formula: <code> S = C * log_10(1 + r) </code>and is
+                applied to each pixel in the image.
+              </p>
+
+              <div class="input-group mb-3">
+                <input
+                  type="text"
+                  class="ltinput form-control"
+                  placeholder="Enter C value (ex. 1)"
+                  aria-describedby="ltcvalue"
+                />
+                <button
+                  class="btn btn-outline-secondary"
+                  type="button"
+                  id="ltcvalue"
+                >
+                  Apply
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card card-bg basic-ops itm">
+            <div class="card-body" style="position: relative">
+              <h5 class="card-title">Gamma Correction (Power-law)</h5>
+              <p class="card-description">
+                Enhancing or modifying the brightness and contrast of an image.
+                PLT is using the formula <code>S = C * r^y </code>and is applied
+                to each pixel in the image.<br />
+                <code>Y &gt; 1</code> Compressing values of dark pixels, expand
+                values of bright pixels.<br />
+                <code>Y &lt; 1</code> Compressing values of bright pixels,
+                expand values of dark pixels.<br />
+                <code>Y = 1</code>, <code>C = 1</code> Identity Transformation.
+              </p>
+              <div class="input-group mb-3">
+                <input
+                  type="text"
+                  class="plinputc form-control"
+                  placeholder="C value (ex. 1)"
+                />
+                <span class="input-group-text">&amp;</span>
+                <input
+                  type="text"
+                  class="plinputy form-control"
+                  placeholder="Y value (ex. 2)"
+                  aria-label="Server"
+                  aria-describedby="button-gamma"
+                />
+                <button
+                  class="btn btn-outline-secondary"
+                  type="button"
+                  id="button-gamma"
+                >
+                  Apply
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card card-bg basic-ops itm">
+            <div class="card-body" style="position: relative">
+              <h5 class="card-title">Image Negative</h5>
+              <p class="card-description">
+                Obtaining the image negative by reversing the gray level order.
+                <code> S = T(r) = (L - 1) - r </code>This operation replaces
+                each pixel's intensity with its complementary value relative to
+                the max intensity.
+              </p>
+              <button
+                id="createnegative"
+                type="button"
+                class="createnegative btn btn-outline-secondary m-b-xs"
+              >
+                Create negative
+              </button>
+            </div>
+          </div>
+
+          <!-- Convolution Items -->
+          <div class="card card-bg conv-ops itm">
+            <div class="card-body" style="position: relative">
+              <h5 class="card-title">Spatial Filter</h5>
+              <p class="card-description">
+                Modifying the values of pixels within an image based on their
+                neighborhoods. A spatial filter processes an image by moving a
+                kernel (also called a filter, mask, or window) over the image
+                and computing a new pixel value at each location in the image.
+              </p>
+
+              <div class="form-check mb-3">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="kernel"
+                  id="sharpening"
+                  checked
+                />
+                <label class="form-check-label" for="sharpening"
+                  >Sharpening kernel 3x3</label
+                >
+              </div>
+              <div class="form-check mb-3">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="kernel"
+                  id="blurring"
+                />
+                <label class="form-check-label" for="blurring"
+                  >Blurring kernel (Gaussian blur) 3x3</label
+                >
+              </div>
+              <button
+                id="apply-spatial"
+                type="button"
+                class="btn btn-outline-secondary m-b-xs"
+              >
+                Apply kernel
+              </button>
+            </div>
+          </div>
+
+          <div class="card card-bg conv-ops itm">
+            <div class="card-body" style="position: relative">
+              <h5 class="card-title">Mean/Average filter</h5>
+              <p class="card-description">
+                Removing random noise from an image while keeping its edges
+                relatively sharp. It works by replacing each pixel's value in an
+                image with the mean (average) value of the intensity levels in
+                the neighborhood of that pixel.
+              </p>
+
+              <button
+                id="apply-meanaverage"
+                type="button"
+                class="btn btn-outline-secondary m-b-xs"
+              >
+                Apply filter
+              </button>
+            </div>
+          </div>
+
+          <div class="card card-bg conv-ops itm">
+            <div class="card-body" style="position: relative">
+              <h5 class="card-title">Median filter</h5>
+              <p class="card-description">
+                Preserving sharp edges while removing noise, also known as 'salt
+                and pepper' noise or impulse noise.
+              </p>
+
+              <button
+                id="apply-median"
+                type="button"
+                class="btn btn-outline-secondary m-b-xs"
+              >
+                Apply filter
+              </button>
+            </div>
+          </div>
+
+          <!-- Interpolation Items -->
+          <div class="card card-bg inter-ops itm">
+            <div class="card-body" style="position: relative">
+              <h5 class="card-title">Nearest-Neighbor Interpolation</h5>
+              <p class="card-description">
+                Nearest neighbor interpolation is an image scaling technique
+                that works by selecting the value of the nearest pixel without
+                considering the values of surrounding pixels, which often leads
+                to a blocky or "pixelated" appearance when upscaled.
+              </p>
+
+              <div class="form-check p-0 mb-3" style="">
+                <label for="nni" class="form-label">Scaling factor</label>
+                <input
+                  type="range"
+                  class="form-range"
+                  min="10"
+                  max="200"
+                  id="nni"
+                  oninput="this.nextElementSibling.value = this.value"
+                />
+                <output>136</output>
+                %
+              </div>
+              <button
+                id="apply-nni"
+                type="button"
+                class="btn btn-outline-secondary m-b-xs"
+              >
+                Apply interpolation
+              </button>
+            </div>
+          </div>
+
+          <div class="card card-bg inter-ops itm">
+            <div class="card-body" style="position: relative">
+              <h5 class="card-title">Bilinear Interpolation</h5>
+              <p class="card-description">
+                Bilinear interpolation considers the closest 2x2 neighborhood of
+                known pixel values surrounding an unknown pixel's calculated
+                location, and it computes the new pixel value using a weighted
+                average of these four pixels.
+              </p>
+
+              <div class="form-check p-0 mb-3" style="">
+                <label for="bilinear" class="form-label">Scaling factor</label>
+                <input
+                  type="range"
+                  class="form-range"
+                  min="10"
+                  max="200"
+                  id="bilinear"
+                  oninput="this.nextElementSibling.value = this.value"
+                />
+                <output>111</output>
+              </div>
+              <button
+                id="apply-bilinear"
+                type="button"
+                class="btn btn-outline-secondary m-b-xs"
+              >
+                Apply Interpolation
+              </button>
+            </div>
+          </div>
+
+          <!-- Compression Items -->
+          <div class="card card-bg compr-ops itm">
+            <div class="card-body" style="position: relative">
+              <h5 class="card-title">
+                Run-Length-Encoding RLE (Grayscale conversion)
+              </h5>
+              <p class="card-description">
+                RLE is a simple form of lossless data compression in which runs
+                of data (sequences in which the same data value occurs in many
+                consecutive data elements) are stored as a single data value and
+                count, rather than as the original run. This method is most
+                effective on data that contains many such runs, for instance,
+                simple graphic images like icons, line drawings, and animations.
+                It's less effective for files that don't have many runs, as it
+                could potentially increase the file size.
+              </p>
+
+              <button
+                id="rlecompress"
+                type="button"
+                class="btn btn-outline-secondary m-b-xs"
+              >
+                Compress &amp; Save
+              </button>
+            </div>
+          </div>
+
+          <div class="card card-bg compr-ops itm">
+            <div class="card-body" style="position: relative">
+              <h5 class="card-title">Huffman Coding (Grayscale conversion)</h5>
+              <p class="card-description">
+                HC is a form of lossless data compression that uses
+                variable-length codes to represent symbols, with shorter codes
+                for more frequent symbols.
+              </p>
+
+              <button
+                id="applyhuffman"
+                type="button"
+                class="btn btn-outline-secondary m-b-xs"
+              >
+                Compress &amp; Save
+              </button>
+            </div>
+          </div>
+
+          <!-- Segmentation Items -->
+          <div class="card card-bg segment-ops itm">
+            <div class="card-body" style="position: relative">
+              <h5 class="card-title">Image Segmentation</h5>
+              <p class="card-description">
+                Partitioning the image into distinct regions containing pixels
+                with similar attributes. It helps in identifying objects and
+                boundaries (lines, curves, etc.) in the image. The goal is to
+                simplify or change the representation of an image into something
+                that is more meaningful and easier to analyze.
+              </p>
+              <div class="form-check mb-3">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="segmentation"
+                  id="thresholding"
+                  checked=""
+                />
+                <label class="form-check-label" for="thresholding"
+                  >Thresholding</label
+                >
+              </div>
+
+              <div class="form-check mb-3">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="segmentation"
+                  id="edgedetection"
+                />
+                <label class="form-check-label" for="edgedetection"
+                  >Edge Detection</label
+                >
+              </div>
+              <div class="form-check mb-3">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="segmentation"
+                  id="clustering"
+                />
+                <label class="form-check-label" for="clustering"
+                  >K-means clustering (k = 3)</label
+                >
+              </div>
+              <div class="form-check mb-3">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="segmentation"
+                  id="sam"
+                />
+                <label class="form-check-label" for="sam"
+                  >Neural Network SAM (sophisticated, slowest)</label
+                >
+              </div>
+              <button
+                id="runsegmentation"
+                type="button"
+                class="btn btn-outline-secondary m-b-xs"
+              >
+                Run segmentation
+              </button>
+            </div>
+          </div>
+
+          <!-- Decompression Items -->
+          <div class="card card-bg decompr-ops itm">
+            <div class="card-body" style="position: relative">
+              <h5 class="card-title">Decompression (Decoding)</h5>
+              <p class="card-description">
+                Decompressing the encoded data back into an image from Huffman
+                Coded and Run-Length-Encoded input image.
+              </p>
+              <div class="form-check mb-3">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="decodeoption"
+                  id="rledecode"
+                  checked=""
+                />
+                <label class="form-check-label" for="rledecode"
+                  >RLE Decoding</label
+                >
+              </div>
+              <div class="form-check mb-3">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="decodeoption"
+                  id="huffdecode"
+                />
+                <label class="form-check-label" for="huffdecode"
+                  >Huffman Decoding</label
+                >
+              </div>
+              <div class="mb-3">
+                <label for="codedFile" class="form-label"
+                  >Upload the .txt file</label
+                >
+                <input
+                  class="form-control form-control-sm"
+                  type="file"
+                  id="codedFile"
+                />
+              </div>
+              <button
+                id="apply-decoding-button"
+                type="button"
+                class="btn btn-outline-secondary m-b-xs"
+              >
+                Decode &amp; Preview
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-footer">
+      <a href="#" class="page-footer-item page-footer-item-left"
+        >Image Processing Web App. All rights reserved.</a
+      >
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
