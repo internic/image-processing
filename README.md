@@ -4,7 +4,7 @@
 This Django-based image processing application provides a user-friendly interface for performing various image processing operations. It allows users to upload images and apply different algorithms like histogram equalization, log transformation, spatial filtering, and more. The app is designed to be intuitive and provides real-time visual feedback for each operation.
 
 <p float="left">
-  <img src="Screenshot_1.png?raw=true" width="80%" />
+  <img src="Screenshot_1.png?raw=true" width="100%" />
 </p>
 
 ## Features
