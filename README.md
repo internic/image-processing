@@ -35,6 +35,14 @@ git clone https://github.com/internic/image-processing.git
 ```
 cd image-processing
 ```
+2.1. Create virtual environment:
+```
+python -m venv .venv (or any other way for your system)
+```
+2.2. Activate your newly created virtual environment:
+```
+source .venv/bin/activate (or any other specific command for your system)
+```
 3. Install the required packages:
 ```
 pip install -r requirements.txt
